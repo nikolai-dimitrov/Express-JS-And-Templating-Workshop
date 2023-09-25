@@ -1,10 +1,18 @@
-// const env = process.env.NODE_ENV || 'development';
+const express = require('express');
+const handlebars = require('express-handlebars');
 
-// const config = require('./config/config')[env];
-// const app = require('express')();
+const app = express();
+const PORT = 5050;
 
-// require('./config/express')(app);
-// require('./config/routes')(app);
+// Handlebars Configurations.
+app.engine('hbs',handlebars.engine({extname: "hbs"}));
+app.set('view engine', 'hbs');
+app.set('views','src/views');
 
-// app.listen(config.port, console.log(`Listening on port ${config.port}! Now its up to you...`));
-console.log('hello world')
+app.get('/', (req,res) => {
+    res.render('index');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
