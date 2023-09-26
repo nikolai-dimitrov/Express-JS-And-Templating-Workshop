@@ -26,6 +26,24 @@ exports.create = (cubeData) => {
   return newCube;
 };
 
-exports.getAll = () => {
-  return [...cubes];
+exports.getAll = (search, from, to) => {
+  let filteredCubes = [...cubes];
+  if(search) {
+    filteredCubes = filteredCubes.filter((cube) => {
+      return cube.name.toLowerCase().includes(search.toLowerCase());
+    });
+  }if (from){
+    filteredCubes = filteredCubes.filter((cube) => {
+      return cube.difficultyLevel >= from;
+    });
+  }if(to) {
+    filteredCubes = filteredCubes.filter((cube) => {
+          return cube.difficultyLevel <= to;
+        });
+  }
+  return filteredCubes
+};
+
+exports.getCurrentCube = (id) => {
+  return cubes.find((cube) => cube.id === id);
 };

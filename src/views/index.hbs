@@ -1,11 +1,12 @@
 <main>
   <h1>Browser</h1>
-  <form action="" method="">
-    <input type="text" class="search" name="search" placeholder="Search..." />
+  <form action="/" method="GET">
+    <input type="text" class="search" name="search" placeholder="Search..." value="{{search}}" />
     <input
       type="number"
       name="from"
       class="difficulty"
+      value="{{from}}"
       placeholder="Difficulty from..."
     />
     <span>-</span>
@@ -13,6 +14,7 @@
       type="number"
       name="to"
       class="difficulty"
+      value="{{to}}"
       placeholder="Difficulty to..."
     />
     <input type="submit" value="search" />
