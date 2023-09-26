@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const cubeService = require("../services/cubeServices");
 //Test mdw
 // function mdw(req, res, next) {
 //   console.log('homeController');
@@ -6,9 +7,9 @@ const router = require("express").Router();
 //   next();
 // }
 // router.use(mdw)
-
 router.get("/", (req, res) => {
-  res.render("index");
+  let cubes = cubeService.getAll();
+  res.render("index", {cubes});
 });
 
 router.get("/about", (req, res) => {
