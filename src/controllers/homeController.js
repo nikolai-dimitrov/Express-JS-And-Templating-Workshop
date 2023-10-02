@@ -7,9 +7,9 @@ const cubeService = require("../services/cubeServices");
 //   next();
 // }
 // router.use(mdw)
-router.get("/", (req, res) => {
-  let { search, from, to } = req.query;
-  let cubes = cubeService.getAll(search, from, to);
+router.get("/", async (req, res) => {
+  let { search, from, to } = req.params;
+  let cubes = await cubeService.getAllQueried(req.query);
   res.render("index", { cubes, search, from, to });
 });
 
