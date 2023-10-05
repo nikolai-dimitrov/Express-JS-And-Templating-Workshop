@@ -13,6 +13,7 @@ router.post("/create", async (req, res) => {
     description,
     imageUrl,
     difficultyLevel: Number(difficultyLevel),
+    owner: req.user._id,
   });
   res.redirect("/cube/create");
 });
@@ -27,6 +28,11 @@ router.get("/:cubeId/details", async (req, res) => {
   let cubeAccessories = await accessoryServices.getCubeAccessories(currentCube);
   console.log(cubeAccessories);
   res.render("../views/cube/details", { currentCube, cubeAccessories });
+});
+router.get("/delete/:cubeId", async (req, res) => {
+  const currentCube = await cubeService.getCurrentCube(req.params.cubeId);
+  console.log(currentCube);
+  res.render("../views/cube/delete", {currentCube});
 });
 module.exports = router;
 
