@@ -34,6 +34,10 @@ router.get("/delete/:cubeId", async (req, res) => {
   console.log(currentCube);
   res.render("../views/cube/delete", {currentCube});
 });
+router.post("/delete/:cubeId", async (req, res) => {
+  await cubeService.delete(req.params.cubeId);
+  res.redirect("/")
+});
 module.exports = router;
 
 // res.render("details", { ...currentCube });

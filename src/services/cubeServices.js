@@ -34,3 +34,5 @@ exports.getCurrentCube = async (id) => {
 exports.getCurrentCubeNotLeaned = async (id) => {
   return await Cube.findById(id);
 };
+
+exports.delete = async (id) => Cube.findByIdAndDelete(id);
