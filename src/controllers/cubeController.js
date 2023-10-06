@@ -29,14 +29,32 @@ router.get("/:cubeId/details", async (req, res) => {
   console.log(cubeAccessories);
   res.render("../views/cube/details", { currentCube, cubeAccessories });
 });
+
 router.get("/delete/:cubeId", async (req, res) => {
   const currentCube = await cubeService.getCurrentCube(req.params.cubeId);
   console.log(currentCube);
-  res.render("../views/cube/delete", {currentCube});
+  res.render("../views/cube/delete", { currentCube });
 });
+
 router.post("/delete/:cubeId", async (req, res) => {
   await cubeService.delete(req.params.cubeId);
-  res.redirect("/")
+  res.redirect("/");
+});
+
+router.get("/edit/:cubeId", async (req, res) => {
+  let currentCube = await cubeService.getCurrentCube(req.params.cubeId);
+  res.render("../views/cube/edit", { currentCube });
+});
+
+router.post("/edit/:cubeId", async (req, res) => {
+  const { name, description, imageUrl, difficultyLevel } = req.body;
+  await cubeService.update(req.params.cubeId, {
+    name,
+    description,
+    imageUrl,
+    difficultyLevel,
+  });
+  res.render("../views/cube/edit");
 });
 module.exports = router;
 

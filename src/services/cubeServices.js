@@ -5,6 +5,13 @@ exports.create = async (cubeData) => {
   return newCube;
 };
 
+exports.update = async (id, cubeData) => {
+  const updatedCube = await Cube.findByIdAndUpdate(id, cubeData);
+  return updatedCube;
+};
+
+exports.delete = async (id) => Cube.findByIdAndDelete(id);
+
 exports.getAllQueried = async (params) => {
   let defaultSearchParams = {
     search: "(.*?)",
@@ -34,5 +41,3 @@ exports.getCurrentCube = async (id) => {
 exports.getCurrentCubeNotLeaned = async (id) => {
   return await Cube.findById(id);
 };
-
-exports.delete = async (id) => Cube.findByIdAndDelete(id);
