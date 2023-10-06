@@ -1,13 +1,15 @@
 const router = require("express").Router();
 const cubeService = require("../services/cubeServices");
 const accessoryServices = require(".././services/accessoryServices");
+const { generateDifficultyLevelViewOpts } = require("../utils/views");
+const { checkPermission } = require("../utils/auth");
 const { isAuth } = require("../middlewares/authMiddleware");
 
 router.get("/create", isAuth, (req, res) => {
   res.render("../views/cube/create");
 });
 
-router.post("/create", async (req, res) => {
+router.post("/create", isAuth, async (req, res) => {
   const { name, description, imageUrl, difficultyLevel } = req.body;
   await cubeService.create({
     name,
@@ -22,8 +24,7 @@ router.post("/create", async (req, res) => {
 router.get("/:cubeId/details", async (req, res) => {
   const { cubeId } = req.params;
   let currentCube = await cubeService.getCurrentCube(cubeId);
-  const [ownerId] = currentCube.owner;
-  const isOwner = currentCube.owner == req.user._id;
+  const isOwner = currentCube.owner?.toString() === req.user?._id;
 
   if (!currentCube) {
     res.redirect("/404");
@@ -39,22 +40,29 @@ router.get("/:cubeId/details", async (req, res) => {
 
 router.get("/delete/:cubeId", isAuth, async (req, res) => {
   const currentCube = await cubeService.getCurrentCube(req.params.cubeId);
-  console.log(currentCube);
-  res.render("../views/cube/delete", { currentCube });
+  checkPermission(currentCube.owner, req.user, res);
+  const options = generateDifficultyLevelViewOpts(currentCube.difficultyLevel);
+  res.render("../views/cube/delete", { currentCube, options });
 });
 
 router.post("/delete/:cubeId", isAuth, async (req, res) => {
+  const currentCube = await cubeService.getCurrentCube(req.params.cubeId);
+  checkPermission(currentCube.owner, req.user, res);
   await cubeService.delete(req.params.cubeId);
   res.redirect("/");
 });
 
 router.get("/edit/:cubeId", isAuth, async (req, res) => {
   let currentCube = await cubeService.getCurrentCube(req.params.cubeId);
-  res.render("../views/cube/edit", { currentCube });
+  checkPermission(currentCube.owner, req.user, res);
+  const options = generateDifficultyLevelViewOpts(currentCube.difficultyLevel);
+  res.render("../views/cube/edit", { currentCube, options });
 });
 
 router.post("/edit/:cubeId", isAuth, async (req, res) => {
   const { name, description, imageUrl, difficultyLevel } = req.body;
+  let currentCube = await cubeService.getCurrentCube(req.params.cubeId);
+  checkPermission(currentCube.owner, req.user, res);
   await cubeService.update(req.params.cubeId, {
     name,
     description,

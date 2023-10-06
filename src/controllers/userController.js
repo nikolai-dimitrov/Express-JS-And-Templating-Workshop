@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const userServices = require("../services/userServices");
 
+
 router.get("/register", (req, res) => {
   res.render("../views/user/register");
 });
@@ -15,15 +16,15 @@ router.get("/login", async (req, res) => {
   res.render("../views/user/login");
 });
 
-router.get("/logout", async (req, res) => {
-  res.clearCookie("auth");
-  res.redirect("/");
-});
-
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const token = await userServices.login(username, password);
   res.cookie("auth", token, { httpOnly: true }); //{ httpOnly: true ,maxAge: 3600 }
+  res.redirect("/");
+});
+
+router.get("/logout", async (req, res) => {
+  res.clearCookie("auth");
   res.redirect("/");
 });
 module.exports = router;
