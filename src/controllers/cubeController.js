@@ -21,13 +21,19 @@ router.post("/create", async (req, res) => {
 router.get("/:cubeId/details", async (req, res) => {
   const { cubeId } = req.params;
   let currentCube = await cubeService.getCurrentCube(cubeId);
+  const [ownerId] = currentCube.owner;
+  const isOwner = currentCube.owner == req.user._id;
+
   if (!currentCube) {
     res.redirect("/404");
     return;
   }
   let cubeAccessories = await accessoryServices.getCubeAccessories(currentCube);
-  console.log(cubeAccessories);
-  res.render("../views/cube/details", { currentCube, cubeAccessories });
+  res.render("../views/cube/details", {
+    currentCube,
+    cubeAccessories,
+    isOwner,
+  });
 });
 
 router.get("/delete/:cubeId", async (req, res) => {
