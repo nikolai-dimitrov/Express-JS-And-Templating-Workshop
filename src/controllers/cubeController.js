@@ -54,7 +54,7 @@ router.post("/edit/:cubeId", async (req, res) => {
     imageUrl,
     difficultyLevel,
   });
-  res.render("../views/cube/edit");
+  res.redirect(`/cube/${req.params.cubeId}/details`);
 });
 module.exports = router;
 
