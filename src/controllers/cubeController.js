@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const cubeService = require("../services/cubeServices");
 const accessoryServices = require(".././services/accessoryServices");
+const { isAuth } = require("../middlewares/authMiddleware");
 
-router.get("/create", (req, res) => {
+router.get("/create", isAuth, (req, res) => {
   res.render("../views/cube/create");
 });
 
@@ -36,23 +37,23 @@ router.get("/:cubeId/details", async (req, res) => {
   });
 });
 
-router.get("/delete/:cubeId", async (req, res) => {
+router.get("/delete/:cubeId", isAuth, async (req, res) => {
   const currentCube = await cubeService.getCurrentCube(req.params.cubeId);
   console.log(currentCube);
   res.render("../views/cube/delete", { currentCube });
 });
 
-router.post("/delete/:cubeId", async (req, res) => {
+router.post("/delete/:cubeId", isAuth, async (req, res) => {
   await cubeService.delete(req.params.cubeId);
   res.redirect("/");
 });
 
-router.get("/edit/:cubeId", async (req, res) => {
+router.get("/edit/:cubeId", isAuth, async (req, res) => {
   let currentCube = await cubeService.getCurrentCube(req.params.cubeId);
   res.render("../views/cube/edit", { currentCube });
 });
 
-router.post("/edit/:cubeId", async (req, res) => {
+router.post("/edit/:cubeId", isAuth, async (req, res) => {
   const { name, description, imageUrl, difficultyLevel } = req.body;
   await cubeService.update(req.params.cubeId, {
     name,
