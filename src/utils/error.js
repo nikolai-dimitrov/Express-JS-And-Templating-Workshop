@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 exports.extractErrorMessages = function (error) {
   console.error(error);
   if (error instanceof mongoose.MongooseError) {
