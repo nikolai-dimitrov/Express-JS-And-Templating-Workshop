@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const userServices = require("../services/userServices");
-
+const { extractErrorMessages } = require("../utils/error");
 
 router.get("/register", (req, res) => {
   res.render("../views/user/register");
@@ -8,8 +8,13 @@ router.get("/register", (req, res) => {
 
 router.post("/register", async (req, res) => {
   const { username, password, repeatPassword } = req.body;
-  await userServices.register({ username, password, repeatPassword });
-  res.redirect("/users/login");
+  try {
+    await userServices.register({ username, password, repeatPassword });
+    res.redirect("/users/login");
+  } catch (err) {
+    const errorMessages = extractErrorMessages(err);
+    res.render("../views/user/register", { errorMessages });
+  }
 });
 
 router.get("/login", async (req, res) => {
