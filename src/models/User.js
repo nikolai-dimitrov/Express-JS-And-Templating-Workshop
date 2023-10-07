@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const modelValidators = require("../validators/modelValidators");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -38,7 +37,7 @@ const userSchema = new mongoose.Schema({
 // We can validate fields without save them to the database.
 userSchema.virtual("repeatPassword").set(function (value) {
   if (value !== this.password) {
-    throw new mongoose.MongooseError("Passwords do not match!");
+    throw new Error("Passwords do not match!");
   }
 });
 
