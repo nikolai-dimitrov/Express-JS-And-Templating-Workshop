@@ -6,21 +6,25 @@ const userSchema = new mongoose.Schema({
   username: {
     type: "string",
     minLength: [5, "Username should be at least 5 characters."],
-    validate: {
-      validator: function (value) {
-        return /^[A-Za-z0-9]+$/.test(value);
+    validate: [
+      {
+        //Access model and find entity in the validator.
+        validator: async function (value) {
+          return (await mongoose
+            .model("User")
+            .findOne({ username: this.username }))
+            ? false
+            : true;
+        },
+        message: "Username already exists.",
       },
-      message: "Username must be letters and digits only.",
-      //Access model and find entity in the validator.
-      validator: async function (value) {
-        return (await mongoose
-          .model("User")
-          .findOne({ username: this.username }))
-          ? false
-          : true;
+      {
+        validator: function (value) {
+          return /^[A-Za-z0-9]+$/.test(value);
+        },
+        message: "Username must be letters and digits only.",
       },
-      message: "Username already exists.",
-    },
+    ],
   },
   password: {
     type: "string",
