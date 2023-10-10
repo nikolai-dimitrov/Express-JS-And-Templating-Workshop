@@ -9,6 +9,6 @@ exports.validateUrl = (url) => {
   }
   return true;
 };
-// exports.validateIsDigitAndLettersOnly = (value) => {
-//   return /^[A-Za-z0-9]+$/.test(value);
-// };
+exports.validateAlphaNumCharacters = (value) => {
+  return /^[A-Za-z0-9\s]+$/.test(value);
+};
