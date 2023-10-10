@@ -3,6 +3,7 @@ const accessoryServices = require("../services/accessoryServices");
 const cubeServices = require("../services/cubeServices");
 const { isAuth } = require("../middlewares/authMiddleware");
 const { checkPermission } = require("../utils/auth");
+const { extractErrorMessages } = require("../utils/error");
 
 router.get("/create", isAuth, (req, res) => {
   res.render("../views/accessory/create");
@@ -10,8 +11,13 @@ router.get("/create", isAuth, (req, res) => {
 
 router.post("/create", isAuth, async (req, res) => {
   let { name, description, imageUrl } = req.body;
-  await accessoryServices.create({ name, description, imageUrl });
-  res.render("../views/accessory/create");
+  try {
+    await accessoryServices.create({ name, description, imageUrl });
+    res.render("../views/accessory/create");
+  } catch (err) {
+    const errorMessages = extractErrorMessages(err);
+    res.render("../views/accessory/create", { errorMessages });
+  }
 });
 //Check permissions for attach.
 router.get("/attach/:cubeId", isAuth, async (req, res) => {

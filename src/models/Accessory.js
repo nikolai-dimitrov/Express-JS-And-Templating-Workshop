@@ -5,15 +5,34 @@ const accessorySchema = new mongoose.Schema({
   name: {
     type: "string",
     required: [true, "This is required"],
+    minLength: [5, "Name must be more than 5 characters."],
+    validate: [
+      {
+        validator: modelValidators.validateAlphaNumCharacters,
+        message: "Name must be letters and digits only.",
+      },
+    ],
   },
   imageUrl: {
     type: "string",
     required: [true, "This is required"],
+    validate: [
+      {
+        validator: modelValidators.validateUrl,
+        message: "Image field must be valid url.",
+      },
+    ],
   },
   description: {
     type: "string",
     required: [true, "This is required"],
-    maxLength: [30,'Description must be at less 30 characters'],
+    minLength: [20, "Description must be more than 20 characters."],
+    validate: [
+      {
+        validator: modelValidators.validateAlphaNumCharacters,
+        message: "Description must consist of alphanumeric characters.",
+      },
+    ],
   },
   cubes: [
     {
@@ -22,9 +41,6 @@ const accessorySchema = new mongoose.Schema({
     },
   ],
 });
-accessorySchema
-  .path("imageUrl")
-  .validate(modelValidators.validateUrl, "This field must be image url");
 
 const Accessory = mongoose.model("Accessory", accessorySchema);
 module.exports = Accessory;
