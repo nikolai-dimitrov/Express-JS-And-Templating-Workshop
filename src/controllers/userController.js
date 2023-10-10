@@ -13,7 +13,8 @@ router.post("/register", async (req, res) => {
     res.redirect("/users/login");
   } catch (err) {
     const errorMessages = extractErrorMessages(err);
-    res.render("../views/user/register", { errorMessages });
+    // res.locals.errorsTest = errorMessages;
+    res.render("../views/user/register", { errorMessages }); //{ errorMessages }
   }
 });
 
@@ -23,9 +24,14 @@ router.get("/login", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const token = await userServices.login(username, password);
-  res.cookie("auth", token, { httpOnly: true }); //{ httpOnly: true ,maxAge: 3600 }
-  res.redirect("/");
+  try {
+    const token = await userServices.login(username, password);
+    res.cookie("auth", token, { httpOnly: true }); //{ httpOnly: true ,maxAge: 3600 }
+    res.redirect("/");
+  } catch (err) {
+    const errorMessages = extractErrorMessages(err);
+    res.render("../views/user/login", { errorMessages });
+  }
 });
 
 router.get("/logout", async (req, res) => {
